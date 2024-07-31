@@ -39,8 +39,6 @@ class EntityManagerProvider extends AbstractProvider
     {
         return function (EntityManagerInterface $entityManager) {
             $entityManager->clear();
-            $entityManager->close();
-            $entityManager->getUnitOfWork()->clear();
         };
     }
 }

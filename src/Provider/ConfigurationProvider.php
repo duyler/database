@@ -21,7 +21,7 @@ class ConfigurationProvider extends AbstractProvider
 
     public function factory(ContainerService $containerService): ?object
     {
-        /** @var ConnectionConfigInterface $connectConfig */
+        /** @var ConnectionConfigInterface $connectionConfig */
         $connectionConfig = $containerService->getInstance(ConnectionConfigInterface::class);
 
         return ORMSetup::createAttributeMetadataConfiguration(

@@ -8,6 +8,7 @@ use Doctrine\DBAL\Connection;
 use Doctrine\ORM\Configuration;
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\EntityManagerInterface;
+use Duyler\ActionBus\Build\SharedService;
 use Duyler\Database\Provider\ConfigurationProvider;
 use Duyler\Database\Provider\ConnectionProvider;
 use Duyler\Database\Provider\EntityManagerProvider;
@@ -36,11 +37,26 @@ class Loader implements PackageLoaderInterface
         $this->container->set($connection);
 
         $loaderService->addSharedService(
-            $entityManager,
-            [
-                EntityManagerInterface::class => EntityManager::class,
-            ],
+            new SharedService(
+                class: Connection::class,
+                service: $connection,
+                providers: [
+                    Configuration::class => ConfigurationProvider::class,
+                    Connection::class => ConnectionProvider::class,
+                ],
+            ),
         );
-        $loaderService->addSharedService($connection);
+
+        $loaderService->addSharedService(
+            new SharedService(
+                class: EntityManager::class,
+                service: $entityManager,
+                providers: [
+                    Configuration::class => ConfigurationProvider::class,
+                    Connection::class => ConnectionProvider::class,
+                    EntityManagerInterface::class => EntityManagerProvider::class,
+                ],
+            ),
+        );
     }
 }

@@ -10,11 +10,14 @@ use Duyler\Database\ConnectionConfigInterface;
 use Duyler\DependencyInjection\ContainerService;
 use Duyler\DependencyInjection\Provider\AbstractProvider;
 
+/**
+ * @psalm-suppress ArgumentTypeCoercion
+ */
 class ConnectionProvider extends AbstractProvider
 {
     public function factory(ContainerService $containerService): ?object
     {
-        /** @var ConnectionConfigInterface $connectConfig */
+        /** @var ConnectionConfigInterface $connectionConfig */
         $connectionConfig = $containerService->getInstance(ConnectionConfigInterface::class);
 
         /** @var Configuration $configuration */
