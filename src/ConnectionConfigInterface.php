@@ -24,6 +24,4 @@ interface ConnectionConfigInterface
     public function getPassword(): string;
 
     public function getCharset(): string;
-
-    public function closeAfterFinalize(): bool;
 }

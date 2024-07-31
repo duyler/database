@@ -17,7 +17,6 @@ class ConnectionConfig implements ConnectionConfigInterface
         /** @var string[] */
         private array $entityPaths = [],
         private bool $isDevMode = false,
-        private bool $closeAfterFinalize = false,
     ) {}
 
     public function getEntityPaths(): array
@@ -63,10 +62,5 @@ class ConnectionConfig implements ConnectionConfigInterface
     public function getCharset(): string
     {
         return $this->charset;
-    }
-
-    public function closeAfterFinalize(): bool
-    {
-        return $this->closeAfterFinalize;
     }
 }
