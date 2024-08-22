@@ -19,7 +19,7 @@
     },
     "require": {
         "php": "^8.3",
-        "duyler/framework": "dev-main",
+        "duyler/builder": "dev-main",
         "doctrine/orm": "^3.2",
         "symfony/cache": "^7.0",
         "doctrine/migrations": "^3.7"

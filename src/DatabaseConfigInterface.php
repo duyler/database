@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Duyler\Database;
 
-interface ConnectionConfigInterface
+interface DatabaseConfigInterface
 {
     /** @return string[] */
     public function getEntityPaths(): array;
@@ -24,4 +24,9 @@ interface ConnectionConfigInterface
     public function getPassword(): string;
 
     public function getCharset(): string;
+
+    /** @return array<string, string> */
+    public function getMigrationsPaths(): array;
+
+    public function getFixturesPaths(): string;
 }

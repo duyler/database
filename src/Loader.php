@@ -8,13 +8,17 @@ use Doctrine\DBAL\Connection;
 use Doctrine\ORM\Configuration;
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\EntityManagerInterface;
+use Duyler\ActionBus\Build\Action;
+use Duyler\ActionBus\Build\Event;
 use Duyler\ActionBus\Build\SharedService;
+use Duyler\Database\Action\FixturesAction;
+use Duyler\Database\Action\MigrationStartAction;
 use Duyler\Database\Provider\ConfigurationProvider;
 use Duyler\Database\Provider\ConnectionProvider;
 use Duyler\Database\Provider\EntityManagerProvider;
 use Duyler\DependencyInjection\ContainerInterface;
-use Duyler\Framework\Loader\LoaderServiceInterface;
-use Duyler\Framework\Loader\PackageLoaderInterface;
+use Duyler\Builder\Loader\LoaderServiceInterface;
+use Duyler\Builder\Loader\PackageLoaderInterface;
 
 class Loader implements PackageLoaderInterface
 {
@@ -56,6 +60,34 @@ class Loader implements PackageLoaderInterface
                     Connection::class => ConnectionProvider::class,
                     EntityManagerInterface::class => EntityManagerProvider::class,
                 ],
+            ),
+        );
+
+        $loaderService->addEvent(
+            new Event(
+                id: 'Migration.Start',
+            ),
+        );
+
+        $loaderService->addAction(
+            new Action(
+                id: "DatabaseMigrationStart",
+                handler: MigrationStartAction::class,
+                listen: 'Migration.Start',
+            ),
+        );
+
+        $loaderService->addEvent(
+            new Event(
+                id: 'Fixture.Start',
+            ),
+        );
+
+        $loaderService->addAction(
+            new Action(
+                id: "DatabaseFixtureStart",
+                handler: FixturesAction::class,
+                listen: 'Fixture.Start',
             ),
         );
     }
