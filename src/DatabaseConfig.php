@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Duyler\Database;
 
-class ConnectionConfig implements ConnectionConfigInterface
+class DatabaseConfig implements DatabaseConfigInterface
 {
     public function __construct(
         private string $driver,
@@ -17,6 +17,9 @@ class ConnectionConfig implements ConnectionConfigInterface
         /** @var string[] */
         private array $entityPaths = [],
         private bool $isDevMode = false,
+        /** @var array<string, string> */
+        private array $migrationsPaths = ['Migrations' => 'migrations'],
+        private string $fixturesPaths = 'fixtures',
     ) {}
 
     public function getEntityPaths(): array
@@ -62,5 +65,15 @@ class ConnectionConfig implements ConnectionConfigInterface
     public function getCharset(): string
     {
         return $this->charset;
+    }
+
+    public function getMigrationsPaths(): array
+    {
+        return $this->migrationsPaths;
+    }
+
+    public function getFixturesPaths(): string
+    {
+        return $this->fixturesPaths;
     }
 }

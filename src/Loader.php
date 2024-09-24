@@ -8,13 +8,13 @@ use Doctrine\DBAL\Connection;
 use Doctrine\ORM\Configuration;
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\EntityManagerInterface;
-use Duyler\ActionBus\Build\SharedService;
+use Duyler\EventBus\Build\SharedService;
 use Duyler\Database\Provider\ConfigurationProvider;
 use Duyler\Database\Provider\ConnectionProvider;
 use Duyler\Database\Provider\EntityManagerProvider;
 use Duyler\DependencyInjection\ContainerInterface;
-use Duyler\Framework\Loader\LoaderServiceInterface;
-use Duyler\Framework\Loader\PackageLoaderInterface;
+use Duyler\Builder\Loader\LoaderServiceInterface;
+use Duyler\Builder\Loader\PackageLoaderInterface;
 
 class Loader implements PackageLoaderInterface
 {

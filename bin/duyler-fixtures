@@ -1,0 +1,56 @@
+#!/usr/bin/env php
+<?php
+
+declare(strict_types=1);
+
+use Doctrine\Common\DataFixtures\Executor\ORMExecutor;
+use Doctrine\Common\DataFixtures\Loader;
+use Doctrine\Common\DataFixtures\Purger\ORMPurger;
+use Doctrine\ORM\EntityManagerInterface;
+use Duyler\Builder\Builder;
+use Duyler\Database\DatabaseConfigInterface;
+use Duyler\EventBus\Build\Action;
+use Duyler\EventBus\Action\Context\ActionContext;
+
+(function () {
+    $possibleFiles = [__DIR__.'/../../autoload.php', __DIR__.'/../autoload.php', __DIR__.'/vendor/autoload.php'];
+    $file = null;
+    foreach ($possibleFiles as $possibleFile) {
+        if (file_exists($possibleFile)) {
+            $file = $possibleFile;
+
+            break;
+        }
+    }
+
+    if (null === $file) {
+        throw new RuntimeException('Unable to locate autoload.php file.');
+    }
+
+    require_once $file;
+})();
+
+$builder = new Builder();
+$builder->loadPackages();
+$builder->doAction(
+    new Action(
+        id: 'StartFixtures',
+        handler: function (ActionContext $context) {
+            echo "Start fixtures\n";
+            /** @var EntityManagerInterface $em */
+            $em = $context->call(fn (EntityManagerInterface $em) => $em);
+            /** @var DatabaseConfigInterface $databaseConfig */
+            $databaseConfig = $context->call(fn (DatabaseConfigInterface $databaseConfig) => $databaseConfig);
+            $loader = new Loader();
+            $loader->loadFromDirectory($databaseConfig->getFixturesPaths());
+
+            $executor = new ORMExecutor($em, new ORMPurger());
+            $executor->execute($loader->getFixtures());
+            echo "Done\n";
+        }
+    )
+);
+
+$bus = $builder->build();
+
+$bus->run();

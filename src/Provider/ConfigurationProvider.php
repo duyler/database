@@ -5,8 +5,8 @@ declare(strict_types=1);
 namespace Duyler\Database\Provider;
 
 use Doctrine\ORM\ORMSetup;
-use Duyler\Database\ConnectionConfig;
-use Duyler\Database\ConnectionConfigInterface;
+use Duyler\Database\DatabaseConfig;
+use Duyler\Database\DatabaseConfigInterface;
 use Duyler\DependencyInjection\ContainerService;
 use Duyler\DependencyInjection\Provider\AbstractProvider;
 
@@ -15,14 +15,14 @@ class ConfigurationProvider extends AbstractProvider
     public function bind(): array
     {
         return [
-            ConnectionConfigInterface::class => ConnectionConfig::class,
+            DatabaseConfigInterface::class => DatabaseConfig::class,
         ];
     }
 
     public function factory(ContainerService $containerService): ?object
     {
-        /** @var ConnectionConfigInterface $connectionConfig */
-        $connectionConfig = $containerService->getInstance(ConnectionConfigInterface::class);
+        /** @var DatabaseConfigInterface $connectionConfig */
+        $connectionConfig = $containerService->getInstance(DatabaseConfigInterface::class);
 
         return ORMSetup::createAttributeMetadataConfiguration(
             paths: $connectionConfig->getEntityPaths(),
