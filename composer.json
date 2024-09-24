@@ -40,5 +40,10 @@
         "psr-4": {
             "Duyler\\Database\\Test\\": ["tests/"]
         }
-    }
+    },
+    "bin": [
+        "bin/duyler-migrations",
+        "bin/duyler-fixtures",
+        "bin/duyler-orm"
+    ]
 }

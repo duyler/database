@@ -1,0 +1,46 @@
+#!/usr/bin/env php
+<?php
+
+declare(strict_types=1);
+
+use Duyler\Builder\Builder;
+use Duyler\EventBus\Build\Action;
+use Duyler\EventBus\Action\Context\ActionContext;
+use Doctrine\ORM\Tools\Console\ConsoleRunner;
+use Doctrine\ORM\EntityManagerInterface;
+use Doctrine\ORM\Tools\Console\EntityManagerProvider\SingleManagerProvider;
+
+(function () {
+    $possibleFiles = [__DIR__.'/../../autoload.php', __DIR__.'/../autoload.php', __DIR__.'/vendor/autoload.php'];
+    $file = null;
+    foreach ($possibleFiles as $possibleFile) {
+        if (file_exists($possibleFile)) {
+            $file = $possibleFile;
+
+            break;
+        }
+    }
+
+    if (null === $file) {
+        throw new RuntimeException('Unable to locate autoload.php file.');
+    }
+
+    require_once $file;
+})();
+
+$builder = new Builder();
+$builder->loadPackages();
+$builder->doAction(
+    new Action(
+        id: 'StartORM',
+        handler: function (ActionContext $context) {
+            /** @var EntityManagerInterface $em */
+            $em = $context->call(fn (EntityManagerInterface $em) => $em);
+            ConsoleRunner::run(new SingleManagerProvider($em));
+        }
+    )
+);
+
+$bus = $builder->build();
+
+$bus->run();
