@@ -7,8 +7,8 @@ namespace Duyler\Database\Provider;
 use Doctrine\ORM\ORMSetup;
 use Duyler\Database\DatabaseConfig;
 use Duyler\Database\DatabaseConfigInterface;
-use Duyler\DependencyInjection\ContainerService;
-use Duyler\DependencyInjection\Provider\AbstractProvider;
+use Duyler\DI\ContainerService;
+use Duyler\DI\Provider\AbstractProvider;
 
 class ConfigurationProvider extends AbstractProvider
 {

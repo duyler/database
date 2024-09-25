@@ -11,7 +11,12 @@ use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\Tools\Console\EntityManagerProvider\SingleManagerProvider;
 
 (function () {
-    $possibleFiles = [__DIR__.'/../../autoload.php', __DIR__.'/../autoload.php', __DIR__.'/vendor/autoload.php'];
+    $possibleFiles = [
+        __DIR__ . '/../../../autoload.php',
+        __DIR__ . '/../../autoload.php',
+        __DIR__ . '/../autoload.php',
+        __DIR__ . '/../vendor/autoload.php',
+    ];
     $file = null;
     foreach ($possibleFiles as $possibleFile) {
         if (file_exists($possibleFile)) {

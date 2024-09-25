@@ -8,8 +8,8 @@ use Doctrine\DBAL\Connection;
 use Doctrine\ORM\Configuration;
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\EntityManagerInterface;
-use Duyler\DependencyInjection\ContainerService;
-use Duyler\DependencyInjection\Provider\AbstractProvider;
+use Duyler\DI\ContainerService;
+use Duyler\DI\Provider\AbstractProvider;
 
 class EntityManagerProvider extends AbstractProvider
 {

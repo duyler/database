@@ -12,7 +12,7 @@ use Duyler\EventBus\Build\SharedService;
 use Duyler\Database\Provider\ConfigurationProvider;
 use Duyler\Database\Provider\ConnectionProvider;
 use Duyler\Database\Provider\EntityManagerProvider;
-use Duyler\DependencyInjection\ContainerInterface;
+use Duyler\DI\ContainerInterface;
 use Duyler\Builder\Loader\LoaderServiceInterface;
 use Duyler\Builder\Loader\PackageLoaderInterface;
 
