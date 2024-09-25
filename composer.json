@@ -15,7 +15,7 @@
         }
     ],
     "support": {
-        "docs": "https://duyler.org/docs/database/"
+        "docs": "https://duyler.org/en/docs/database/"
     },
     "require": {
         "php": "^8.3",
@@ -28,7 +28,8 @@
         "phpunit/phpunit": "^10.0",
         "friendsofphp/php-cs-fixer": "^3.30",
         "squizlabs/php_codesniffer": "^4.0",
-        "vimeo/psalm": "^5.0"
+        "vimeo/psalm": "^5.0",
+        "doctrine/data-fixtures": "^1.7"
     },
     "minimum-stability": "dev",
     "autoload": {
