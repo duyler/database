@@ -7,8 +7,8 @@ namespace Duyler\Database\Provider;
 use Doctrine\DBAL\DriverManager;
 use Doctrine\ORM\Configuration;
 use Duyler\Database\DatabaseConfigInterface;
-use Duyler\DependencyInjection\ContainerService;
-use Duyler\DependencyInjection\Provider\AbstractProvider;
+use Duyler\DI\ContainerService;
+use Duyler\DI\Provider\AbstractProvider;
 
 /**
  * @psalm-suppress ArgumentTypeCoercion
