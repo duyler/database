@@ -8,9 +8,11 @@ use Doctrine\Common\DataFixtures\Loader;
 use Doctrine\Common\DataFixtures\Purger\ORMPurger;
 use Doctrine\ORM\EntityManagerInterface;
 use Duyler\Builder\ApplicationBuilder;
+use Duyler\Builder\Config\BusConfig;
 use Duyler\Database\DatabaseConfigInterface;
 use Duyler\EventBus\Build\Action;
 use Duyler\EventBus\Action\Context\ActionContext;
+use Duyler\EventBus\Enum\Mode;
 
 (function () {
     $possibleFiles = [
@@ -36,7 +38,7 @@ use Duyler\EventBus\Action\Context\ActionContext;
 })();
 
 (new ApplicationBuilder())
-    ->getBusBuilder()
+    ->getBusBuilder(new BusConfig(mode: Mode::Queue))
     ->doAction(
         new Action(
             id: 'StartFixtures',
@@ -56,6 +58,5 @@ use Duyler\EventBus\Action\Context\ActionContext;
         )
     )
     ->loadPackages()
-    ->loadBuild()
     ->build()
     ->run();
