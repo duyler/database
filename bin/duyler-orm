@@ -4,11 +4,13 @@
 declare(strict_types=1);
 
 use Duyler\Builder\ApplicationBuilder;
+use Duyler\Builder\Config\BusConfig;
 use Duyler\EventBus\Build\Action;
 use Duyler\EventBus\Action\Context\ActionContext;
 use Doctrine\ORM\Tools\Console\ConsoleRunner;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\Tools\Console\EntityManagerProvider\SingleManagerProvider;
+use Duyler\EventBus\Enum\Mode;
 
 (function () {
     $possibleFiles = [
@@ -34,7 +36,7 @@ use Doctrine\ORM\Tools\Console\EntityManagerProvider\SingleManagerProvider;
 })();
 
 (new ApplicationBuilder())
-    ->getBusBuilder()
+    ->getBusBuilder(new BusConfig(mode: Mode::Queue))
     ->doAction(
         new Action(
             id: 'StartORM',
@@ -46,6 +48,5 @@ use Doctrine\ORM\Tools\Console\EntityManagerProvider\SingleManagerProvider;
         )
     )
     ->loadPackages()
-    ->loadBuild()
     ->build()
     ->run();
