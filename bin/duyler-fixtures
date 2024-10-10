@@ -7,7 +7,7 @@ use Doctrine\Common\DataFixtures\Executor\ORMExecutor;
 use Doctrine\Common\DataFixtures\Loader;
 use Doctrine\Common\DataFixtures\Purger\ORMPurger;
 use Doctrine\ORM\EntityManagerInterface;
-use Duyler\Builder\Builder;
+use Duyler\Builder\ApplicationBuilder;
 use Duyler\Database\DatabaseConfigInterface;
 use Duyler\EventBus\Build\Action;
 use Duyler\EventBus\Action\Context\ActionContext;
@@ -35,27 +35,27 @@ use Duyler\EventBus\Action\Context\ActionContext;
     require_once $file;
 })();
 
-$builder = new Builder();
-$builder->loadPackages();
-$builder->doAction(
-    new Action(
-        id: 'StartFixtures',
-        handler: function (ActionContext $context) {
-            echo "Start fixtures\n";
-            /** @var EntityManagerInterface $em */
-            $em = $context->call(fn (EntityManagerInterface $em) => $em);
-            /** @var DatabaseConfigInterface $databaseConfig */
-            $databaseConfig = $context->call(fn (DatabaseConfigInterface $databaseConfig) => $databaseConfig);
-            $loader = new Loader();
-            $loader->loadFromDirectory($databaseConfig->getFixturesPaths());
+(new ApplicationBuilder())
+    ->getBusBuilder()
+    ->doAction(
+        new Action(
+            id: 'StartFixtures',
+            handler: function (ActionContext $context) {
+                echo "Start fixtures\n";
+                /** @var EntityManagerInterface $em */
+                $em = $context->call(fn (EntityManagerInterface $em) => $em);
+                /** @var DatabaseConfigInterface $databaseConfig */
+                $databaseConfig = $context->call(fn (DatabaseConfigInterface $databaseConfig) => $databaseConfig);
+                $loader = new Loader();
+                $loader->loadFromDirectory($databaseConfig->getFixturesPaths());
 
-            $executor = new ORMExecutor($em, new ORMPurger());
-            $executor->execute($loader->getFixtures());
-            echo "Done\n";
-        }
+                $executor = new ORMExecutor($em, new ORMPurger());
+                $executor->execute($loader->getFixtures());
+                echo "Done\n";
+            }
+        )
     )
-);
-
-$bus = $builder->build();
-
-$bus->run();
+    ->loadPackages()
+    ->loadBuild()
+    ->build()
+    ->run();

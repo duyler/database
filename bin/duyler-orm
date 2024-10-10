@@ -3,7 +3,7 @@
 
 declare(strict_types=1);
 
-use Duyler\Builder\Builder;
+use Duyler\Builder\ApplicationBuilder;
 use Duyler\EventBus\Build\Action;
 use Duyler\EventBus\Action\Context\ActionContext;
 use Doctrine\ORM\Tools\Console\ConsoleRunner;
@@ -33,19 +33,19 @@ use Doctrine\ORM\Tools\Console\EntityManagerProvider\SingleManagerProvider;
     require_once $file;
 })();
 
-$builder = new Builder();
-$builder->loadPackages();
-$builder->doAction(
-    new Action(
-        id: 'StartORM',
-        handler: function (ActionContext $context) {
-            /** @var EntityManagerInterface $em */
-            $em = $context->call(fn (EntityManagerInterface $em) => $em);
-            ConsoleRunner::run(new SingleManagerProvider($em));
-        }
+(new ApplicationBuilder())
+    ->getBusBuilder()
+    ->doAction(
+        new Action(
+            id: 'StartORM',
+            handler: function (ActionContext $context) {
+                /** @var EntityManagerInterface $em */
+                $em = $context->call(fn (EntityManagerInterface $em) => $em);
+                ConsoleRunner::run(new SingleManagerProvider($em));
+            }
+        )
     )
-);
-
-$bus = $builder->build();
-
-$bus->run();
+    ->loadPackages()
+    ->loadBuild()
+    ->build()
+    ->run();

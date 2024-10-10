@@ -11,7 +11,7 @@ use Doctrine\ORM\EntityManagerInterface;
 use Duyler\Database\DatabaseConfigInterface;
 use Duyler\EventBus\Build\Action;
 use Duyler\EventBus\Action\Context\ActionContext;
-use Duyler\Builder\Builder;
+use Duyler\Builder\ApplicationBuilder;
 use Symfony\Component\Console\Application;
 
 (function () {
@@ -37,61 +37,61 @@ use Symfony\Component\Console\Application;
     require_once $file;
 })();
 
-$builder = new Builder();
-$builder->loadPackages();
-$builder->doAction(
-    new Action(
-        id: 'StartMigrations',
-        handler: function (ActionContext $context) {
-            /** @var EntityManagerInterface $em */
-            $em = $context->call(fn (EntityManagerInterface $em) => $em);
-            /** @var DatabaseConfigInterface $databaseConfig */
-            $databaseConfig = $context->call(fn (DatabaseConfigInterface $databaseConfig) => $databaseConfig);
-            $config = [
-                'table_storage' => [
-                    'table_name' => 'doctrine_migration_versions',
-                    'version_column_name' => 'version',
-                    'version_column_length' => 191,
-                    'executed_at_column_name' => 'executed_at',
-                    'execution_time_column_name' => 'execution_time',
-                ],
+(new ApplicationBuilder())
+    ->getBusBuilder()
+    ->doAction(
+        new Action(
+            id: 'StartMigrations',
+            handler: function (ActionContext $context) {
+                /** @var EntityManagerInterface $em */
+                $em = $context->call(fn (EntityManagerInterface $em) => $em);
+                /** @var DatabaseConfigInterface $databaseConfig */
+                $databaseConfig = $context->call(fn (DatabaseConfigInterface $databaseConfig) => $databaseConfig);
+                $config = [
+                    'table_storage' => [
+                        'table_name' => 'doctrine_migration_versions',
+                        'version_column_name' => 'version',
+                        'version_column_length' => 191,
+                        'executed_at_column_name' => 'executed_at',
+                        'execution_time_column_name' => 'execution_time',
+                    ],
 
-                'migrations_paths' => $databaseConfig->getMigrationsPaths(),
+                    'migrations_paths' => $databaseConfig->getMigrationsPaths(),
 
-                'all_or_nothing' => true,
-                'transactional' => true,
-                'check_database_platform' => true,
-                'organize_migrations' => 'none',
-                'connection' => null,
-                'em' => null,
-            ];
+                    'all_or_nothing' => true,
+                    'transactional' => true,
+                    'check_database_platform' => true,
+                    'organize_migrations' => 'none',
+                    'connection' => null,
+                    'em' => null,
+                ];
 
-            $dependencyFactory = DependencyFactory::fromConnection(
-                new ConfigurationArray($config),
-                new ExistingConnection($em->getConnection()),
-            );
+                $dependencyFactory = DependencyFactory::fromConnection(
+                    new ConfigurationArray($config),
+                    new ExistingConnection($em->getConnection()),
+                );
 
-            $cli = new Application('Doctrine Migrations');
-            $cli->setCatchExceptions(true);
+                $cli = new Application('Doctrine Migrations');
+                $cli->setCatchExceptions(true);
 
-            $cli->addCommands([
-                new Command\DumpSchemaCommand($dependencyFactory),
-                new Command\ExecuteCommand($dependencyFactory),
-                new Command\GenerateCommand($dependencyFactory),
-                new Command\LatestCommand($dependencyFactory),
-                new Command\ListCommand($dependencyFactory),
-                new Command\MigrateCommand($dependencyFactory),
-                new Command\RollupCommand($dependencyFactory),
-                new Command\StatusCommand($dependencyFactory),
-                new Command\SyncMetadataCommand($dependencyFactory),
-                new Command\VersionCommand($dependencyFactory),
-            ]);
+                $cli->addCommands([
+                    new Command\DumpSchemaCommand($dependencyFactory),
+                    new Command\ExecuteCommand($dependencyFactory),
+                    new Command\GenerateCommand($dependencyFactory),
+                    new Command\LatestCommand($dependencyFactory),
+                    new Command\ListCommand($dependencyFactory),
+                    new Command\MigrateCommand($dependencyFactory),
+                    new Command\RollupCommand($dependencyFactory),
+                    new Command\StatusCommand($dependencyFactory),
+                    new Command\SyncMetadataCommand($dependencyFactory),
+                    new Command\VersionCommand($dependencyFactory),
+                ]);
 
-            $cli->run();
-        }
+                $cli->run();
+            }
+        )
     )
-);
-
-$bus = $builder->build();
-
-$bus->run();
+    ->loadPackages()
+    ->loadBuild()
+    ->build()
+    ->run();
